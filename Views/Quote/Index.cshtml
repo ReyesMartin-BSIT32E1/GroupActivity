@@ -1,0 +1,43 @@
+﻿<style>
+    .quote {
+        width: 100vw;
+        height: 20vw;
+    }
+
+    @@media (min-width: 768px) {
+        .quote {
+            width: 50vw;
+            height: 10vw;
+        }
+    }
+</style>
+<h1 class="text-center">Quote Generator</h1>
+<div class="row d-flex justify-content-center">
+    <blockquote class="quote d-flex flex-column justify-content-center text-center">
+        <p id="QuoteText" class="blockquote"></p>
+        <footer id="Author" class="blockquote-footer"></footer>
+    </blockquote>
+</div>
+<div class="row d-flex justify-content-center">
+    <button id="QuoteButton" class="w-auto btn btn-dark">Display Random Quote</button>
+</div>
+@section Scripts {
+    <script>
+        function DisplayRandomQuote()
+        {
+            $.ajax
+            ({
+                type: 'GET',
+                url: '/Quote/RandomQuote',
+                success: function (data)
+                {
+                    $('#QuoteText').text(data.quoteText);
+                    $('#Author').text(data.author);
+                }
+            });
+        }
+        $(document).ready(function (){
+            $('#QuoteButton').click(DisplayRandomQuote);
+        });
+    </script>
+}

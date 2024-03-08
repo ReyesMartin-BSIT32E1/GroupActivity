@@ -1,0 +1,137 @@
+﻿<style>
+    button{
+        color: #fff;
+        background-color: #212529;
+        border-color: #212529;
+    }
+
+    button:hover {
+        color: #fff;
+        background-color: #1c1f23;
+        border-color: #1a1e21;
+    }
+
+    .view {
+        line-height: 9vw;
+        color: #fff;
+        background-color: #1f2226;
+    }
+
+    .calculator-body {
+        width: 75vw;
+        height: 112.5vw;
+    }
+
+    @@media (min-width: 576px) {
+        .calculator-body {
+            width: 50vw;
+            height: 75vw;
+        }
+        .view {
+            line-height: 6vw;
+        }
+    }
+
+    @@media (min-width: 768px) {
+        .calculator-body {
+            width: 25vw;
+            height: 37.5vw;
+        }
+        .view {
+            line-height: 3vw;
+        }
+    }
+
+    .calculator-grid {
+        grid-template-rows: repeat(6, calc(100%/ 6));
+        grid-template-columns: repeat(4, 25%);
+        height: 100%;
+    }
+</style>
+<h1 class="text-center">Simple Calculator</h1>
+<div class="d-flex justify-content-center">
+    <div class="calculator-body">
+        <div class="calculator-grid d-grid text-end">
+            <div class="view" style="grid-column: span 4; height: 100%;">
+                <div id="previous" class="h-50 container"></div>
+                <div id="current" class="h-50 container">0</div>
+            </div>
+            <button onclick="Clear()" style="grid-column: span 2">All Clear</button>
+            <button onclick="DeleteDigit()">Delete</button>
+            <button onclick="ChooseOperation('/')">/</button>
+            <button onclick="AddDigit(7)">7</button>
+            <button onclick="AddDigit(8)">8</button>
+            <button onclick="AddDigit(9)">9</button>
+            <button onclick="ChooseOperation('*')">*</button>
+            <button onclick="AddDigit(4)">4</button>
+            <button onclick="AddDigit(5)">5</button>
+            <button onclick="AddDigit(6)">6</button>
+            <button onclick="ChooseOperation('-')">-</button>
+            <button onclick="AddDigit(1)">1</button>
+            <button onclick="AddDigit(2)">2</button>
+            <button onclick="AddDigit(3)">3</button>
+            <button onclick="ChooseOperation('+')">+</button>
+            <button onclick="AddDigit(0)">0</button>
+            <button onclick="AddDecimal()">.</button>
+            <button onclick="Evaluate()" style="grid-column: span 2">=</button>
+        </div>
+    </div>
+</div>
+<script>
+    let previousDisplay = document.getElementById('previous');
+    let currentDisplay = document.getElementById('current');
+    let evaluated = false;
+    let operation_added = false;
+    function AddDigit(digit){
+        if (currentDisplay.textContent === '0' || evaluated) {
+            currentDisplay.textContent = digit;
+            evaluated = false;
+        } else {
+            currentDisplay.textContent += digit;
+        }
+        operation_added = false;
+    }
+    function AddDecimal() {
+        if (evaluated) {
+            Clear()
+            evaluated = false;
+        }
+        if (!currentDisplay.textContent.includes('.')) {
+            currentDisplay.textContent += '.';
+        }
+    }
+    function Clear() {
+        previousDisplay.textContent = '';
+        currentDisplay.textContent = '0';
+    }
+    function DeleteDigit() {
+        if (evaluated) {
+            Clear()
+            evaluated = false;
+        } else {
+            currentDisplay.textContent = currentDisplay.textContent.slice(0, -1);
+            if (currentDisplay.textContent === '') {
+                currentDisplay.textContent = '0';
+            }
+        } 
+    }
+    function ChooseOperation(operation) {
+        if (operation_added) {
+            previousDisplay.textContent = previousDisplay.textContent.slice(0, -1) + operation;
+            return;
+        }
+        if (!(previousDisplay.textContent === '')) {
+            Evaluate();
+        }
+        previousDisplay.textContent = currentDisplay.textContent + operation;
+        currentDisplay.textContent = '0';
+        operation_added = true;
+        evaluated = false;
+    }
+    function Evaluate() {
+        currentDisplay.textContent = eval(previousDisplay.textContent + currentDisplay.textContent);
+        previousDisplay.textContent = '';
+        operation_added = false;
+        evaluated = true;
+    }
+</script>

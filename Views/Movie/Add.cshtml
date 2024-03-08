@@ -1,0 +1,33 @@
+﻿@model Movie
+<div class="row">
+    <form method="post" class="col-12 col-md-6">
+        <h1>Add Movie</h1>
+        <label>Title</label>
+        <input asp-for="Title" type="text" maxlength="63" class="form-control" required />
+        <label>Release Year</label>
+        <input asp-for="ReleaseYear" type="number" min="1900" max="2099" value="@DateTime.Now.Year" class="form-control" required />
+        <label>Genre</label>
+        <select asp-for="Genre" class="form-control form-select mb-3" required>
+            <option value="Action">Action</option>
+            <option value="Adventure">Adventure</option>
+            <option value="Animation">Animation</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Crime">Crime</option>
+            <option value="Drama">Drama</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Horror">Horror</option>
+            <option value="Mystery">Mystery</option>
+            <option value="Romance">Romance</option>
+            <option value="Sci-fi">Sci-fi</option>
+            <option value="Thriller">Thriller</option>
+        </select>
+        <div class="row">
+            <div class="col-6">
+                <button type="submit" class="btn btn-dark form-control">Add</button>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-dark form-control" asp-controller="Movie" asp-action="Index">Back</a>
+            </div>
+        </div>
+    </form>
+</div>
