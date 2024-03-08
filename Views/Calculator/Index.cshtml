@@ -78,60 +78,66 @@
     </div>
 </div>
 <script>
-    let previousDisplay = document.getElementById('previous');
-    let currentDisplay = document.getElementById('current');
-    let evaluated = false;
-    let operation_added = false;
-    function AddDigit(digit){
-        if (currentDisplay.textContent === '0' || evaluated) {
-            currentDisplay.textContent = digit;
-            evaluated = false;
-        } else {
-            currentDisplay.textContent += digit;
-        }
-        operation_added = false;
-    }
-    function AddDecimal() {
-        if (evaluated) {
-            Clear()
-            evaluated = false;
-        }
-        if (!currentDisplay.textContent.includes('.')) {
-            currentDisplay.textContent += '.';
-        }
-    }
     function Clear() {
-        previousDisplay.textContent = '';
-        currentDisplay.textContent = '0';
-    }
-    function DeleteDigit() {
-        if (evaluated) {
-            Clear()
-            evaluated = false;
-        } else {
-            currentDisplay.textContent = currentDisplay.textContent.slice(0, -1);
-            if (currentDisplay.textContent === '') {
-                currentDisplay.textContent = '0';
+        $.ajax({
+            url: '/Calculator/Clear',
+            type: 'GET',
+            success: function (data) {
+                $('#previous').text(data.previousDisplay);
+                $('#current').text(data.currentDisplay);
             }
-        } 
+        });
     }
+
+    function DeleteDigit() {
+        $.ajax({
+            url: '/Calculator/DeleteDigit',
+            type: 'GET',
+            success: function (data) {
+                $('#current').text(data.currentDisplay);
+            }
+        });
+    }
+
+    function AddDigit(digit) {
+        $.ajax({
+            url: '/Calculator/AddDigit?digit=' + digit,
+            type: 'GET',
+            success: function (data) {
+                $('#current').text(data.currentDisplay);
+            }
+        });
+    }
+
+    function AddDecimal() {
+        $.ajax({
+            url: '/Calculator/AddDecimal',
+            type: 'GET',
+            success: function (data) {
+                $('#current').text(data.currentDisplay);
+            }
+        });
+    }
+
     function ChooseOperation(operation) {
-        if (operation_added) {
-            previousDisplay.textContent = previousDisplay.textContent.slice(0, -1) + operation;
-            return;
-        }
-        if (!(previousDisplay.textContent === '')) {
-            Evaluate();
-        }
-        previousDisplay.textContent = currentDisplay.textContent + operation;
-        currentDisplay.textContent = '0';
-        operation_added = true;
-        evaluated = false;
+        $.ajax({
+            url: '/Calculator/ChooseOperation?operation=' + encodeURIComponent(operation),
+            type: 'GET',
+            success: function (data) {
+                $('#previous').text(data.previousDisplay);
+                $('#current').text(data.currentDisplay);
+            }
+        });
     }
+
     function Evaluate() {
-        currentDisplay.textContent = eval(previousDisplay.textContent + currentDisplay.textContent);
-        previousDisplay.textContent = '';
-        operation_added = false;
-        evaluated = true;
+        $.ajax({
+            url: '/Calculator/Evaluate',
+            type: 'GET',
+            success: function (data) {
+                $('#previous').text(data.previousDisplay);
+                $('#current').text(data.currentDisplay);
+            }
+        });
     }
 </script>
